@@ -8,7 +8,7 @@ const bot = new Discord.Client();
 const fs = require('fs');
 const profanities = require('profanities');
 //Call the file userData.json by using fs
-var userData = JSON.parse(fs.readFileSync("Storage/userData.json"));
+const userData = JSON.parse(fs.readFileSync("Storage/userData.json"));
 //Make a collection of all the commands for the bot
 bot.commands = new Discord.Collection();
 //Read the directory of the commands forder
