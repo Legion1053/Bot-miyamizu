@@ -6,11 +6,24 @@ const Discord = require("discord.js");
 const prefix = client.prefix;
 const bot = new Discord.Client();
 const fs = require('fs');
-const profanities = require('profanities');
+const ytdl = require('ytdl-core');
+const antispam = require("discord-anti-spam");
+//const profanities = require('profanities');
 //Call the file userData.json by using fs
 const userData = JSON.parse(fs.readFileSync("Storage/userData.json"));
 //Make a collection of all the commands for the bot
 bot.commands = new Discord.Collection();
+
+antispam(bot,{
+	warnBuffer: 3, 
+    maxBuffer: 5, 
+    interval: 3000, 
+    warningMessage: "Hello, don't spam. PuRe bot has anti spam features. You'll be banned if you continue.", 
+    //banMessage: " was banned for spamming. Don't test PuRe bots anti spam. Would anyone else like a try?", 
+    maxDuplicatesWarning: 7, 
+    maxDuplicatesBan: 10, 
+    deleteMessagesAfterBanForPastDays: 7
+});
 //Read the directory of the commands forder
 let loadCmds = ()=>{
 fs.readdir('./cmds/',(err,files)=>{
@@ -41,9 +54,9 @@ loadCmds();
 //Listener Event: message received (This will run every time a message is received)
 bot.on("message",(message,guild) =>{
 //Variables
-	let sender = message.author; //The person who sent the message
+	let sender = message.author; //The person who sent the message 
 	let msg = message.content.toLowerCase();//Take the message, and make it all lowercase
-	let cont = message.content.slice(prefix.length).split(' ');
+	let cont = message.content.slice(prefix.length).trim().split(' ');
 	let args = cont.slice(1);
 	if(!message.content.startsWith(prefix)) return;
 
@@ -53,14 +66,6 @@ bot.on("message",(message,guild) =>{
 	if(msg=== prefix+ 'reload'){
 		message.channel.send({embed:{description: "Tất cả câu lệnh đã được khởi động lại"}});
 		loadCmds();
-	}
-//profanity
-	for(let x=0;x<profanities.length;x++){//This loop every word of the profanities list I downloaded
-		if(msg === profanities[x].toLowerCase()){
-			message.channel.send('Hey,pls don\'t say that!');
-			message.delete();
-			return;//Stop the rest of the commands from running loop
-		}
 	}
 });
 //Listener Event: user joining the discord server
