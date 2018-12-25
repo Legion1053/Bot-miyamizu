@@ -25,8 +25,8 @@ antispam(bot,{
     deleteMessagesAfterBanForPastDays: 7
 });
 //Read the directory of the commands forder
-let loadCmds = ()=>{
-fs.readdir('./cmds/',(err,files)=>{
+let loadCmds = (link)=>{
+fs.readdir(`./cmds/${link}/`,(err,files)=>{
 	if(err) console.error(err);//Send an error message if it gets an error
 	//Check if the file extension is 'js' or the text after dot is 'js'
 	let jsfiles = files.filter(f => f.split('.').pop()==='js');
@@ -34,8 +34,8 @@ fs.readdir('./cmds/',(err,files)=>{
 	else console.log(jsfiles.length+' câu lệnh được tìm thấy');
 
 	jsfiles.forEach((f,i)=>{ //Loop though each file and run the following code
-		delete require.cache[require.resolve(`./cmds/${f}`)];//This delete the cached file that you spectify
-		let cmds = require(`./cmds/${f}`);// Gets every js file in the chosen folder
+		delete require.cache[require.resolve(`./cmds/${link}/${f}`)];//This delete the cached file that you spectify
+		let cmds = require(`./cmds/${link}/${f}`);// Gets every js file in the chosen folder
 		console.log(`file ${f} đang chạy...`);
 		bot.commands.set(cmds.config.command,cmds);
 	});
@@ -50,7 +50,8 @@ bot.on("ready", () =>{
 	//Activity
 	bot.user.setActivity(">>help để trợ giúp",{type: "PLAYING"});
 });
-loadCmds();
+loadCmds('Info');
+//loadCmds('Actions');
 //Listener Event: message received (This will run every time a message is received)
 bot.on("message",(message,guild) =>{
 //Variables
@@ -66,13 +67,13 @@ bot.on("message",(message,guild) =>{
 	if(msg=== prefix+ 'reload'){
 		message.channel.send({embed:{description: "Tất cả câu lệnh đã được khởi động lại"}});
 		loadCmds();
-	}
+	}	
 });
 //Listener Event: user joining the discord server
 bot.on("guildMemberAdd",member =>{
 	//Send a message in chat-room channel that someone joined the discord server
 	member.guild.channels.find("name","chat-room").sendMessage(`Chào mừng đến server,${member.user.username}`);
-	//Then add a role when they come
+	//Then add a role when they come 
 	let role = member.guild.roles.find("name","BOTS");
 	member.addRole(role);
 });
