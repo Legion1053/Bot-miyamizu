@@ -18,7 +18,7 @@ antispam(bot,{
 	warnBuffer: 3, 
     maxBuffer: 5, 
     interval: 3000, 
-    warningMessage: "Hello, don't spam. PuRe bot has anti spam features. You'll be banned if you continue.", 
+    warningMessage: "Phát hiện ra có thành viên spam", 
     //banMessage: " was banned for spamming. Don't test PuRe bots anti spam. Would anyone else like a try?", 
     maxDuplicatesWarning: 7, 
     maxDuplicatesBan: 10, 
@@ -50,8 +50,11 @@ bot.on("ready", () =>{
 	//Activity
 	bot.user.setActivity(">>help để trợ giúp",{type: "PLAYING"});
 });
-loadCmds('Info');
-//loadCmds('Actions');
+// loadCmds('Info');
+// loadCmds('Economy');
+loadCmds('Fun');
+// loadCmds('Actions');
+// loadCmds('Music');
 //Listener Event: message received (This will run every time a message is received)
 bot.on("message",(message,guild) =>{
 //Variables
@@ -64,21 +67,24 @@ bot.on("message",(message,guild) =>{
 	let cmd = bot.commands.get(cont[0]);
 
 	if(cmd) cmd.run(bot,message,args);
-	if(msg=== prefix+ 'reload'){
-		message.channel.send({embed:{description: "Tất cả câu lệnh đã được khởi động lại"}});
-		loadCmds();
-	}	
+	// if(msg=== prefix+ 'reload'){
+	// 	if(message.author.id !== '412952754839879680') return message.channel.send('Bạn không có quyền sử dụng câu lệnh này!');
+	// 	else {
+	// 		message.channel.send({embed:{description: "Tất cả câu lệnh đã được khởi động lại"}});
+	// 		loadCmds();
+	// 	}
+	// }	
 });
 //Listener Event: user joining the discord server
 bot.on("guildMemberAdd",member =>{
 	//Send a message in chat-room channel that someone joined the discord server
-	member.guild.channels.find("name","chat-room").sendMessage(`Chào mừng đến server,${member.user.username}`);
+	member.guild.channels.find("name","chat-room").sendMessage(`Chào mừng bạn đến server, ${member.user.username}`);
 	//Then add a role when they come 
 	let role = member.guild.roles.find("name","BOTS");
 	member.addRole(role);
 });
 //Listener Event: user leaving the discord server
 bot.on("guildMemberRemove",member =>{
-	member.guild.channels.find("name","chat-room").sendMessage(`${member.user.username},Tạm biệt bạn nhé...`);
+	member.guild.channels.find("name","chat-room").sendMessage(`${member.user.username}, Tạm biệt bạn nhé...`);
 });
 bot.login(client.token);
