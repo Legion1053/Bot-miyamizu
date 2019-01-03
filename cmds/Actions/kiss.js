@@ -9,7 +9,7 @@ module.exports.run = async(bot,message,args) =>{
     	msg.delete(3000)
   	});
     else if(args[0] === '<@514823687560757268>') message.channel.send(`Aww cảm ơn bạn XD ${body.url}`);	  
-    else message.channel.send(`**${message.author.username}** vừa hôn **${mention.username}** kìa :hearts: ${body.url}`);
+    else message.channel.send(`**${message.author.username}** vừa hôn **${mention.username}** kìa :kissing_heart: ${body.url}`);
 
 }
 
