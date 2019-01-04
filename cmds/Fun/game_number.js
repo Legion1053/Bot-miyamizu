@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 
 module.exports.run = async(bot,message,args) =>{
-	let num = Math.floor((Math.random()*100)+1);
+	const num = Math.floor((Math.random()*100)+1);
 
 	message.channel.send('Bạn hãy đoán số trong khoảng từ 1 đến 100 :thinking:')
 

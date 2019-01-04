@@ -6,9 +6,10 @@ module.exports.run = async(bot,message,args) =>{
 	anime.getInfoFromName(search)
 		.then(data =>{
 			const malEmbed = new Discord.RichEmbed()
+				.setAuthor(manga.titles.english)
+				.setColor('#ab4cf9')
 				.setThumbnail(data.picture)
-				.setFooter(`Link ${data.url}`)
-				.addField(':flag_us: Tiêu đề tiếng Anh: ',data.englishTitle,true)
+				.setDescription(data.synopsis.replace(/<[^>]*>/g, '').split('\n')[0])
 				.addField(':flag_jp: Tiêu đề tiếng Nhật: ',data.japaneseTitle,true)
 				.addField(':watch: Tình trạng: ',data.status)
 				.addField(':page_with_curl: Thể loại: ',data.type,true)

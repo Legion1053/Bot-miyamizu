@@ -21,10 +21,9 @@ module.exports.run = async(bot,message,args) =>{
 			.addField(':large_blue_diamond: Nickname: ',user.name,true)
 			.addField(':large_blue_diamond: PP: ',Math.round(user.pp.raw),true)
 			.addField(':large_blue_diamond: Rank: ',user.pp.rank,true)
-			.addField(':large_blue_diamond: Level: ',Math.round(user.level),true)
-			.addBlankField()
-			.addField(`:large_blue_diamond: Quốc gia: :flag_${flag}:`,true)
-			.addField(`:large_blue_diamond: Rank :flag_${flag}: : ${user.pp.countryRank}`,true)
+			.addField(':large_blue_diamond: Level: ',Math.round(user.level),true) 
+			.addField(`:large_blue_diamond: Quốc gia: `,`:flag_${flag}:`,true)
+			.addField(`:large_blue_diamond: Rank :flag_${flag}: :`, `${user.pp.countryRank}`,true)
 			.addField(':large_blue_diamond: Số lần chơi: ',user.counts.plays,true)
 			.addField(':large_blue_diamond: Độ chính xác: ',user.accuracyFormatted,true)
 		message.channel.send(OsuEmbed);
