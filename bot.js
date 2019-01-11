@@ -39,11 +39,11 @@ bot.on("ready", () =>{
 	//Activity
 	bot.user.setActivity(">>help để trợ giúp",{type: "PLAYING"});
 });
-// loadCmds('Info');  
+loadCmds('Info');  
 // loadCmds('Economy');
 // loadCmds('Fun');
-loadCmds('Actions');
- loadCmds('Music');
+//loadCmds('Actions');
+//loadCmds('Music');
 //Listener Event: message received (This will run every time a message is received)
 bot.on("message",(message,guild) =>{
 //Variables
