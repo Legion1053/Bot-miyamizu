@@ -7,23 +7,12 @@ const prefix = client.prefix;
 const bot = new Discord.Client();
 const fs = require('fs');
 const ytdl = require('ytdl-core');
-const antispam = require("discord-anti-spam");
 //const profanities = require('profanities');
 //Call the file userData.json by using fs
 const userData = JSON.parse(fs.readFileSync("Storage/userData.json"));
 //Make a collection of all the commands for the bot
 bot.commands = new Discord.Collection();
 
-antispam(bot,{
-	warnBuffer: 3, 
-    maxBuffer: 5, 
-    interval: 3000, 
-    warningMessage: "Phát hiện ra có thành viên spam", 
-    //banMessage: " was banned for spamming. Don't test PuRe bots anti spam. Would anyone else like a try?", 
-    maxDuplicatesWarning: 7, 
-    maxDuplicatesBan: 10, 
-    deleteMessagesAfterBanForPastDays: 7
-});
 //Read the directory of the commands forder
 let loadCmds = (link)=>{
 fs.readdir(`./cmds/${link}/`,(err,files)=>{
@@ -50,11 +39,11 @@ bot.on("ready", () =>{
 	//Activity
 	bot.user.setActivity(">>help để trợ giúp",{type: "PLAYING"});
 });
-// loadCmds('Info');
+// loadCmds('Info');  
 // loadCmds('Economy');
-loadCmds('Fun');
-// loadCmds('Actions');
-// loadCmds('Music');
+// loadCmds('Fun');
+loadCmds('Actions');
+ loadCmds('Music');
 //Listener Event: message received (This will run every time a message is received)
 bot.on("message",(message,guild) =>{
 //Variables
