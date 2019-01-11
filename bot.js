@@ -1,9 +1,9 @@
 //process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
-const client = require("./botsettings.json");
+//const client = require("./botsettings.json");
 // Import the discord.js module
 const Discord = require("discord.js");
-const prefix = client.prefix;
+const prefix = '>>';
 const bot = new Discord.Client();
 const fs = require('fs');
 const ytdl = require('ytdl-core');
@@ -41,8 +41,8 @@ bot.on("ready", () =>{
 });
 loadCmds('Info');  
 // loadCmds('Economy');
-// loadCmds('Fun');
-//loadCmds('Actions');
+loadCmds('Fun');
+loadCmds('Actions');
 //loadCmds('Music');
 //Listener Event: message received (This will run every time a message is received)
 bot.on("message",(message,guild) =>{
@@ -76,4 +76,4 @@ bot.on("guildMemberAdd",member =>{
 bot.on("guildMemberRemove",member =>{
 	member.guild.channels.find("name","chat-room").sendMessage(`${member.user.username}, Tạm biệt bạn nhé...`);
 });
-bot.login(client.token);
+bot.login(process.env.BOT_TOKEN);
