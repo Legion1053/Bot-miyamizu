@@ -2,7 +2,7 @@ const superagent = require("superagent");
 
 module.exports.run = async(bot,message,args) =>{ 
 	let {body} = await superagent
-    	.get(`https://api.tenor.com/v1/random?q=anime+hold+hands&key=10LA8OYRLBFU&limit=1`);
+    	.get(`https://api.tenor.com/v1/random?q=anime+hold+hands&key=${process.env.TENOR_API}&limit=1`);
     let mention = message.mentions.users.first();
     if (!mention) return message.channel.send(`Bạn phải chọn người để nắm tay đã :3`).then(msg => {
     	msg.delete(3000)
