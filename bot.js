@@ -41,7 +41,7 @@ bot.on("ready", () =>{
 });
 loadCmds('Info');  
 // loadCmds('Economy');
-//loadCmds('Fun');
+loadCmds('Fun');
 loadCmds('Actions');
 //loadCmds('Music');
 //Listener Event: message received (This will run every time a message is received)
