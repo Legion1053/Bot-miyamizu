@@ -6,8 +6,8 @@ const Discord = require("discord.js");
 const prefix = '>>';
 const bot = new Discord.Client();
 const fs = require('fs');
-const ytdl = require('ytdl-core');
-//const profanities = require('profanities');
+const mysql = require('mysql');
+
 //Call the file userData.json by using fs
 const userData = JSON.parse(fs.readFileSync("Storage/userData.json"));
 //Make a collection of all the commands for the bot
@@ -41,28 +41,52 @@ bot.on("ready", () =>{
 });
 loadCmds('Info');  
 // loadCmds('Economy');
-loadCmds('Fun');
-loadCmds('Actions');
+//loadCmds('Fun');
+//loadCmds('Actions');
 //loadCmds('Music');
+
+var db = mysql.createConnection({
+	host: 'localhost',
+	user: 'root',
+	password: 'Tyuoshn51234511',
+	database: 'miyamizu'
+});
+
+db.connect(err =>{
+	if(err) throw err;
+	console.log('Đã kết nối vào database!');
+	//db.query('SHOW TABLES',console.log);
+});
+
+var generateXP = () =>{
+	return Math.floor(Math.random()*(50 - 10 + 1) + 10);
+}
+
+
 //Listener Event: message received (This will run every time a message is received)
 bot.on("message",(message,guild) =>{
-//Variables
-	let sender = message.author; //The person who sent the message 
-	let msg = message.content.toLowerCase();//Take the message, and make it all lowercase
+	//Variables
+	let sender = message.author; 
+	let msg = message.content.toLowerCase();
 	let cont = message.content.slice(prefix.length).trim().split(' ');
 	let args = cont.slice(1);
-	if(!message.content.startsWith(prefix)) return;
-
+	
 	let cmd = bot.commands.get(cont[0]);
+	if(cmd) cmd.run(bot,message,args,db);
 
-	if(cmd) cmd.run(bot,message,args);
-	// if(msg=== prefix+ 'reload'){
-	// 	if(message.author.id !== '412952754839879680') return message.channel.send('Bạn không có quyền sử dụng câu lệnh này!');
-	// 	else {
-	// 		message.channel.send({embed:{description: "Tất cả câu lệnh đã được khởi động lại"}});
-	// 		loadCmds();
-	// 	}
-	// }	
+	db.query(`SELECT * FROM xp WHERE id = '${message.author.id}'`,(err,rows)=>{
+		if(err) throw err;
+		let sql;
+
+		if(rows.length < 1){
+			sql = `INSERT INTO xp (id,xp) VALUES ('${message.author.id}', ${generateXP()})`;
+		} else {
+			let xp = rows[0].xp;
+			sql = `UPDATE xp SET xp = ${xp + generateXP()} WHERE id = '${message.author.id}'`;
+		}
+
+		db.query(sql,console.log);
+	});
 });
 //Listener Event: user joining the discord server
 bot.on("guildMemberAdd",member =>{
