@@ -1,6 +1,6 @@
 const Discord= require("discord.js" );
 const moment = require("moment")
-module.exports.run = async(bot,message,args) =>{
+module.exports.run = async(bot,message,args,db) =>{
 	let mention = message.mentions.members.first() || message.member;
 	let member = message.mentions.users.first() || message.author;
 	let embed = new Discord.RichEmbed()
