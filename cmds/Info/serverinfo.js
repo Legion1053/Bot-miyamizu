@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 
-module.exports.run = async(bot,message,args) =>{
+module.exports.run = async(bot,message,args,db) =>{
 	let online = message.guild.members.filter(member => member.user.presence.status !== 'offline');
 	let serverCreated = message.guild.createdAt.toString().split(' ');
 	let servericon = message.guild.iconURL;
