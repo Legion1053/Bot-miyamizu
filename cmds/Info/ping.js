@@ -1,4 +1,4 @@
-module.exports.run = async(bot,message,args) =>{//This is what will run when the command is called
+module.exports.run = async(bot,message,args,db) =>{//This is what will run when the command is called
 //Ping/Pong command
 		message.channel.sendMessage(`pong! **${Math.round(bot.ping)}** ms`);
 }
