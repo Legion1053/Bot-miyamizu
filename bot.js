@@ -48,7 +48,7 @@ loadCmds('Info');
 var db = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
-	password: 'Tyuoshn51234511',
+	password: process.env.SQL_PASS,
 	database: 'miyamizu'
 });
 
