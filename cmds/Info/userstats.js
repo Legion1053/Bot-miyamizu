@@ -1,7 +1,7 @@
 const fs = require('fs');
 const userData = JSON.parse(fs.readFileSync("Storage/userData.json","utf8"));
 
-module.exports.run = async(bot,message,args) =>{
+module.exports.run = async(bot,message,args,db) =>{
 	let sender= message.author;
 	//Make sure their username is there before write the file
 	if(!userData[sender.id + message.guild.id]) userData[sender.id + message.guild.id] = {//To make the ID unique when they are in the diffrent server
