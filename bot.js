@@ -85,7 +85,7 @@ bot.on("message",(message,guild) =>{
 			sql = `UPDATE xp SET xp = ${xp + generateXP()} WHERE id = '${message.author.id}'`;
 		}
 
-		db.query(sql,console.log);
+		db.query(sql);
 	});
 });
 //Listener Event: user joining the discord server
