@@ -1,31 +1,39 @@
-const Discord = require("discord.js");
-const anime = require("mal-scraper");
+const Discord = require('discord.js');
+const Kitsu = require('kitsu.js');
+const kitsu = new Kitsu();
 
 module.exports.run = async(bot,message,args) =>{
 	const search = args.slice().join(" ");
-	anime.getInfoFromName(search)
-		.then(data =>{
-			const malEmbed = new Discord.RichEmbed()
-				.setAuthor(manga.titles.english)
-				.setColor('#ab4cf9')
-				.setThumbnail(data.picture)
-				.setDescription(data.synopsis.replace(/<[^>]*>/g, '').split('\n')[0])
-				.addField(':flag_jp: Tiêu đề tiếng Nhật: ',data.japaneseTitle,true)
-				.addField(':watch: Tình trạng: ',data.status)
-				.addField(':page_with_curl: Thể loại: ',data.type,true)
-				.addField(':dvd: Số tập: ',data.episodes,true)
-				.addField(':arrow_up: Độ tuổi: ',data.rating,true)
-				.addField(':calendar_spiral: Ngày ra mắt: ',data.aired,true)
-				.addField(':star: Số điểm đánh giá: ',data.score,true)
-				.addField(':trophy: Xếp hạng: ',data.ranked,true)
-			message.channel.send(malEmbed);
+	if(!search) message.channel.send('Bạn phải nhập tên anime đã :v');
+
+	kitsu.searchAnime(search)
+		.then(result =>{
+			if(result.length === 0) { 
+				return message.channel.send('Không tìm thấy anime cần tìm!');
+			}
+			let anime = result[0];
+
+			const embed = new Discord.RichEmbed()
+				.setAuthor(anime.titles.romaji)
+				.setColor('#4d8ff9')
+				.setThumbnail(anime.posterImage.original)
+				.setDescription(`${anime.synopsis.replace(/<[^>]*>/g, '').split('\n')[0]}`)
+				.addField(':flag_jp: Tiêu đề tiếng Nhật: ',anime.titles.japanese,true)
+				.addField(':page_with_curl: Thể loại: ',anime.showType,true)
+				.addField(':watch: Tình trạng: ',`từ **${anime.startDate}** đến **${anime.endDate ? anime.endDate : 'Đang hoàn thành'}**`,true)
+				.addField(':dvd: Số tập: ',`**${anime.episodeCount ? anime.episodeCount : 'N/A'}**`,true)
+				.addField(':arrow_up: Độ tuổi: ',`**${anime.ageRating ? anime.ageRating : 'N/A'}**`,true)
+				.addField(':star: Số điểm đánh giá: ',`**${anime.averageRating ? anime.averageRating : 'N/A'}/100**`,true)
+				.addField(':trophy: Xếp hạng: ',`**TOP ${anime.ratingRank ? anime.ratingRank : 'N/A'}**`,true)
+			message.channel.send(embed);
 		})
 		.catch((err)=> {
 			console.log(err);
-			message.channel.send("Không tìm thấy anime cần tìm! "); 
+			message.channel.send('Không tìm thấy anime cần tìm! '); 
 		});
 }
 
-module.exports.config ={
-	command: "anime"
+module.exports.config = {
+	command : 'anime',
+  	category: 'Fun'
 }
