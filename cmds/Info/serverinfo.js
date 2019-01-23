@@ -1,6 +1,6 @@
-const Discord = require("discord.js");
+const Discord = require('discord.js');
 
-module.exports.run = async(bot,message,args,db) =>{
+module.exports.run = async(bot,message,args) =>{
 	let online = message.guild.members.filter(member => member.user.presence.status !== 'offline');
 	let serverCreated = message.guild.createdAt.toString().split(' ');
 	let servericon = message.guild.iconURL;
@@ -20,5 +20,6 @@ module.exports.run = async(bot,message,args,db) =>{
 }
 
 module.exports.config = {
-	command: 'serverinfo'
+	command: 'serverinfo',
+  	category: 'Info'
 }
