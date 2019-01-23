@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+const Discord = require('discord.js');
 
 module.exports.run = async(bot,message,args) =>{
 	let replies = ['Ừ, chắc chắn rồi','Không bao giờ ','Bạn thử hỏi lại xem','Có thể đó','Ừ,cũng có thể','Chưa chắc chắn lắm'];
@@ -11,5 +11,6 @@ module.exports.run = async(bot,message,args) =>{
 }
 
 module.exports.config = {
-	command: '8ball'
+	command: '8ball',
+  	category: 'Fun'
 }
