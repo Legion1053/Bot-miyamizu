@@ -1,8 +1,8 @@
-module.exports.run = async(bot,message,args,db) =>{//This is what will run when the command is called
-//Ping/Pong command
-		message.channel.sendMessage(`pong! **${Math.round(bot.ping)}** ms`);
+module.exports.run = async(bot,message,args) =>{
+	message.channel.send(`pong! **${Math.round(bot.ping)}** ms`);
 }
 
-module.exports.config = {// This is the config for the command, you can add things to this like proper usage,...
-	command: "ping"
+module.exports.config = {
+	command: "ping",
+ 	category: "Info"
 }
