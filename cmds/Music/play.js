@@ -5,6 +5,10 @@ const youtube = new YouTube(process.env.YOUTUBE_API);
 
 let servers = {};
 module.exports.run = async(bot, message, args,ops) => {
+    bot.on('warn', console.warn);
+    bot.on('error', console.error);
+    bot.on('disconnect', () => console.log('I just disconnected, making sure you know, I will reconnect now...'));
+    bot.on('reconnecting', () => console.log('I am reconnecting now!'));
     let reaction_numbers = ["\u0030\u20E3","\u0031\u20E3","\u0032\u20E3","\u0033\u20E3","\u0034\u20E3","\u0035\u20E3", "\u0036\u20E3","\u0037\u20E3","\u0038\u20E3","\u0039\u20E3"];
     let url = args[0] ? args[0].replace(/<(.+)>/g, '$1') : '';
     const searchString = args.join(' ');
@@ -34,10 +38,10 @@ module.exports.run = async(bot, message, args,ops) => {
                 
                 message.channel.send(embed).then(msg => {
                     msg.delete(21000)
-                });;
+                });
 
                    try {
-                        var response = await message.channel.awaitMessages(msg2 => msg2.content > 0 && msg2.content < 11, {
+                        var response = await message.channel.awaitMessages(msg2 => msg2.content > 0 && msg2.content < 6, {
                             maxMatches: 1,
                             time: 20000,
                             errors: ['time']
@@ -104,8 +108,9 @@ async function play(guild, song){
 	console.log(serverQueue.songs);
 
 	const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
-		.on('end', reason => {
-      message.channel.send('Bài hát đã kết thúc!');
+		  .on('end', reason => {
+      message.channel.send('Kết thúc bài hát!');
+      console.log(reason);
 			serverQueue.songs.shift();
 			play(guild, serverQueue.songs[0]);
 		})
@@ -128,4 +133,3 @@ module.exports.config = {
   description: "Dùng để phát nhạc",
   usage: ">>play [tên bài hát hoặc link]"
 }
-
