@@ -6,5 +6,7 @@ module.exports.run= async(bot,message,args)=>{
 
 module.exports.config ={
 	command: "choose",
-  	category: "Fun"
+  category: "Fun",
+  description: "Dùng để lựa chọn",
+  usage: ">>choose [câu hỏi]"
 }
