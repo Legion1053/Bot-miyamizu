@@ -1,11 +1,11 @@
 const Discord = require('discord.js');
 const osu = require('node-osu');
 const api = new osu.Api(process.env.OSU_API,{
-	notFoundAsError: true,
+	  notFoundAsError: true,
     completeScores: false 
 })
 
-module.exports.run = async(bot,message,args) =>{
+module.exports.run = async(bot,message,args,db) =>{
 	let username = args[0];
 
 	if(!args[0]) return message.channel.send('Bạn phải nhập tên người chơi đã :3').then(msg =>{
@@ -31,5 +31,8 @@ module.exports.run = async(bot,message,args) =>{
 }
 
 module.exports.config ={
-	command: 'osu'
+	command: 'osu',
+  	category: 'Fun',
+  	description: "Dùng để lấy thông tin của người chơi osu cần tìm",
+  	usage: ">>osu [tên người chơi]"
 }
