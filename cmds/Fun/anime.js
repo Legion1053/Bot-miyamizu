@@ -4,7 +4,7 @@ const kitsu = new Kitsu();
 
 module.exports.run = async(bot,message,args) =>{
 	const search = args.slice().join(" ");
-	if(!search) message.channel.send('Bạn phải nhập tên anime đã :v');
+	if(!search) return message.channel.send('Bạn phải nhập tên anime đã :v');
 
 	kitsu.searchAnime(search)
 		.then(result =>{
@@ -28,7 +28,7 @@ module.exports.run = async(bot,message,args) =>{
 			message.channel.send(embed);
 		})
 		.catch((err)=> {
-			console.log(err);
+			console.error(err);
 			message.channel.send('Không tìm thấy anime cần tìm! '); 
 		});
 }
