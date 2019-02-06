@@ -1,15 +1,25 @@
-const fs= require('fs');
-const userData = JSON.parse(fs.readFileSync("Storage/userData.json","utf8"));
-module.exports.run = async(bot,message,args)=>{
-	let sender= message.author;
-	//if(!userData[sender.id + message.guild.id]) userData[sender.id + message.guild.id] = {};
-	if(!userData[sender.id + message.guild.id].money) userData[sender.id + message.guild.id].money = 1000;
-	fs.writeFile("Storage/userData.json",JSON.stringify(userData), err =>{
-		if(err) console.error(err)
-	})
-	message.channel.send(`Bạn có ${userData[sender.id+message.guild.id].money}$ trong tài khoản`);
+const db = require('quick.db');
+const Discord = require('discord.js');
+
+module.exports.run = async (bot, message, args) => {
+
+ let mention = message.mentions.users.first() || message.author;
+        
+        let balance = await db.fetch(`userBalance_${mention.id}`);
+        
+        if (balance === null) balance = 50;
+        
+        let embed = new Discord.RichEmbed()
+          .setTitle('Tổng số tiền')
+          .setDescription(`${mention.username}, bạn có **${balance}** :dollar: trong tài khoản`)
+          .setColor('#ffff00')
+        message.channel.send(embed)
+
 }
 
 module.exports.config = {
-	command: "balance"
+  command: 'balance',
+  category: 'Economy',
+  description: "Dùng để kiểm tra số tiền hiện tại của mình, hoặc của người khác",
+  usage: ">>balance [@user]"
 }
