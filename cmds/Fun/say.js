@@ -7,5 +7,8 @@ module.exports.run = async(bot,message,args) => {
 }
 
 module.exports.config ={
-	command: 'say'
+	command: 'say',
+  	category: 'Fun',
+  	description: "Dùng để nói ",
+  	usage: ">>say [đoạn cần nói]"
 }
