@@ -35,5 +35,7 @@ module.exports.run = async(bot,message,args) =>{
 
 module.exports.config = {
 	command : 'anime',
-  	category: 'Fun'
+ 	category: 'Fun',
+  	description: "Dùng để lấy thông tin anime cần tìm",
+  	usage: ">>anime [tên anime]"
 }
