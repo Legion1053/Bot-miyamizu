@@ -7,8 +7,8 @@ let servers = {};
 module.exports.run = async(bot, message, args,ops) => {
     bot.on('warn', console.warn);
     bot.on('error', console.error);
-    bot.on('disconnect', () => console.log('I just disconnected, making sure you know, I will reconnect now...'));
-    bot.on('reconnecting', () => console.log('I am reconnecting now!'));
+    bot.on('disconnect', () => console.log('Bot bị lỗi kết nối...'));
+    bot.on('reconnecting', () => console.log('Bot đang được kết nối!'));
     let reaction_numbers = ["\u0030\u20E3","\u0031\u20E3","\u0032\u20E3","\u0033\u20E3","\u0034\u20E3","\u0035\u20E3", "\u0036\u20E3","\u0037\u20E3","\u0038\u20E3","\u0039\u20E3"];
     let url = args[0] ? args[0].replace(/<(.+)>/g, '$1') : '';
     const searchString = args.join(' ');
@@ -63,9 +63,10 @@ module.exports.run = async(bot, message, args,ops) => {
 async function handleVideo(video, message, voiceChannel, playlist = false) {
     const serverQueue = ops.active.get(message.guild.id);
     const song = {
-		id: video.id,
-		title: video.title,
-		url: `https://www.youtube.com/watch?v=${video.id}`
+	id: video.id,
+	title: video.title,
+   	duration: video.duration,
+	url: `https://www.youtube.com/watch?v=${video.id}`
 	}
     if (!serverQueue) {
 		  const queueConstruct = {
@@ -97,7 +98,7 @@ async function handleVideo(video, message, voiceChannel, playlist = false) {
 	}
 	return undefined;
 }
-async function play(guild, song){
+function play(guild, song){
 	const serverQueue = ops.active.get(guild.id);
 
 	if (!song) {
@@ -119,14 +120,30 @@ async function play(guild, song){
 
   const mEmbed = new Discord.RichEmbed()
     .setColor('#4286f4')
-    .addField(`=========================================================`,`
-🎶 Đang phát nhạc: **${song.title}**
-:white_circle:─────────────────────────────────────────── 
+    .setThumbnail(`https://img.youtube.com/vi/${song.id}/0.jpg`)
+    .addField(`================================================`,`
+🎶 Đang phát nhạc: **${song.title}**  
+
+0:00 :white_circle:─────────────────────────────── ${generateTime(song.duration.hours,song.duration.minutes,song.duration.seconds)}
 ◄◄⠀▐▐ ⠀►►⠀⠀　　        　　 :gear: ❐ ⊏⊐ 
-========================================================= `)
+=============================================== `)
   serverQueue.textChannel.send(mEmbed);
 }
 }
+
+let generateTime = (hour,minute,second) =>{
+      if(hour === 0){ 
+      	if(second>10) return `${minute}:${second}`;
+      	else if(second<10) return `${minute}:0${second}`;
+        else return `${minute}:${second}`;
+      } else {
+      	if(minute<10 && second<10) return `${hour}:0${minute}:0${second}`;
+      	else if(minute<10 && second>10) return `${hour}:0${minute}:${second}`;
+      	else if(minute>10 && second<10) return `${hour}:${minute}:0${second}`;
+        else return `${minute}:${second}`;
+      }
+}
+
 module.exports.config = {
   command: 'play',
   category: 'Music',
