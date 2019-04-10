@@ -1,20 +1,33 @@
-const db = require('quick.db');
 const Discord = require('discord.js');
+const mongoose = require('mongoose');
 
-module.exports.run = async (bot, message, args) => {
+mongoose.connect(`mongodb+srv://${process.env.USER}:${process.env.PASS}@${process.env.HOST}/${process.env.DB}`,{
+  useNewUrlParser: true
+});
 
- let mention = message.mentions.users.first() || message.author;
-        
-        let balance = await db.fetch(`userBalance_${mention.id}`);
-        
-        if (balance === null) balance = 50;
-        
-        let embed = new Discord.RichEmbed()
-          .setTitle('Tổng số tiền')
-          .setDescription(`${mention.username}, bạn có **${balance}** :dollar: trong tài khoản`)
-          .setColor('#ffff00')
-        message.channel.send(embed)
-
+module.exports.run = async(bot,message,args,ops,coin) => {
+      let mention = message.mentions.users.first() || message.author;
+  
+      coin.findOne({
+            userID: mention.id,
+        },(err,res) =>{
+            if(err) console.log(err);
+            if(!res){
+            const newDoc = new coin({
+                userID: mention.id,
+                steak: 1,
+                money: 200,
+                lastDaily: 0
+            })
+        newDoc.save().catch(err => console.log(err));
+        } else {
+            let embed = new Discord.RichEmbed()
+                .setTitle('Tổng số tiền')
+                .setDescription(`${mention.username}, bạn có **${res.money}**đ trong tài khoản`)
+                .setColor('#ffff00')
+            message.channel.send(embed)
+        }
+      })
 }
 
 module.exports.config = {
