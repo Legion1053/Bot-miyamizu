@@ -2,10 +2,15 @@ const Discord = require('discord.js');
 const prefix = '>>';
 const bot = new Discord.Client();
 const fs = require('fs');
-const userData = JSON.parse(fs.readFileSync("Storage/userData.json"));
-const db = require('quick.db');
-const SQLite = require("better-sqlite3");
-const sql = new SQLite('./scores.sqlite');
+
+const mongoose = require('mongoose');
+
+mongoose.connect(`mongodb+srv://${process.env.USER}:${process.env.PASS}@${process.env.HOST}/${process.env.DB}`,{
+  useNewUrlParser: true
+});
+
+const Exp = require('./models/Exp.js');
+const coin = require('./models/Money.js');
 
 const OID = process.env.OWNER_ID;
 const active = new Map();
@@ -33,17 +38,6 @@ bot.on("ready", () =>{
 	console.log(`Bot ${bot.user.username} sẵn sàng`);
 	bot.user.setStatus("Idle");
 	bot.user.setActivity(">>help để trợ giúp",{type: "PLAYING"});
-    const table = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'scores';").get();
-    if (!table['count(*)']) {
-    // If the table isn't there, create it and setup the database correctly.
-    sql.prepare("CREATE TABLE scores (id TEXT PRIMARY KEY, user TEXT, guild TEXT, points INTEGER, level INTEGER);").run();
-    // Ensure that the "id" row is always unique and indexed.
-    sql.prepare("CREATE UNIQUE INDEX idx_scores_id ON scores (id);").run();
-    sql.pragma("synchronous = 1");
-    sql.pragma("journal_mode = wal");
-  }
-  bot.getScore = sql.prepare("SELECT * FROM scores WHERE user = ? AND guild = ?");
-  bot.setScore = sql.prepare("INSERT OR REPLACE INTO scores (id, user, guild, points, level) VALUES (@id, @user, @guild, @points, @level);");
 });
 
 loadCmds('Info');
@@ -51,32 +45,45 @@ loadCmds('Fun');
 loadCmds('Actions');
 loadCmds('Economy');
 loadCmds('Music');
-loadCmds('WereWolf');
+//loadCmds('WereWolf');
 
 bot.on('message',(message,guild) =>{ 
     if (message.author.bot || !message.guild) return;
-    let score;
     let xpAdd = Math.floor(Math.random()*(20 - 10 + 1) + 10);
     let mention = message.mentions.users.first() || message.author;
-    if (message.guild) {
-    // Try to get the current user's score. 
-    score = bot.getScore.get(mention.id, message.guild.id);
+        
+    Exp.findOne({
+        userID: message.author.id,
+        serverID: message.guild.id
+    },(err,res) =>{
+        if(err) console.log(err);
+        if(!res){
+          const newDoc = new Exp({
+            userID: message.author.id,
+            serverID: message.guild.id,
+            xp: 0,
+            startxp: 0,
+            level: 1
+        })
+        newDoc.save().catch(err => console.log(err));
+        } else {
+            let curxp = res.xp;  
+            let curlvl = res.level;
+            let nxtlvl = curlvl * 400;
+          
+            let xpAdd = Math.floor(Math.random()*(20 - 10 + 1) + 10);
+          
+            res.xp += xpAdd;
+          
+            if(nxtlvl <= res.xp) {
+                res.level = curlvl + 1;
+                res.startxp = nxtlvl;
+                message.channel.send(`Chúc mừng ${message.author} vừa mới lên level **${curlvl+1}** kìa :3`);
+            }
+            res.save().catch(err => console.error(err));
+        }
+    })
     
-    // If the score doesn't exist (new user), initialize with defaults. 
-    if (!score) {
-      score = { id: `${message.guild.id}-${mention.id}`, user: mention.id, guild: message.guild.id, points: 0, level: 1 };
-    }
-    let curxp = score.points;
-    const curLevel = score.level;
-    let nxtLvl = curLevel * 400 + Math.round(Math.sqrt(score.points));
-    
-    score.points = curxp + xpAdd;
-    if(nxtLvl <= score.points) {
-      score.level = curLevel + 1;
-      message.channel.send(`Chúc mừng ${message.author} vừa mới lên level **${curLevel+1}** kìa :3`);
-    }
-      bot.setScore.run(score);
-    }
   if(message.content.indexOf(prefix) !== 0) return;
   let sender = message.author; 
 	let msg = message.content.toLowerCase();
@@ -90,7 +97,7 @@ bot.on('message',(message,guild) =>{
   
 	let cmd = bot.commands.get(cont[0]);
   
-	if(cmd) cmd.run(bot,message,args,ops,score); 
+	if(cmd) cmd.run(bot,message,args,ops,coin); 
 });
 
 bot.on("guildMemberAdd",member =>{
