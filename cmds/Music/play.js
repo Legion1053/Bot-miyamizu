@@ -2,31 +2,61 @@ const Discord = require('discord.js');
 const YouTube = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
 const youtube = new YouTube(process.env.YOUTUBE_API);
+const superagent = require('superagent');
 
-let servers = {};
+
 module.exports.run = async(bot, message, args,ops) => {
     bot.on('warn', console.warn);
     bot.on('error', console.error);
     bot.on('disconnect', () => console.log('Bot bị lỗi kết nối...'));
     bot.on('reconnecting', () => console.log('Bot đang được kết nối!'));
-    let reaction_numbers = ["\u0030\u20E3","\u0031\u20E3","\u0032\u20E3","\u0033\u20E3","\u0034\u20E3","\u0035\u20E3", "\u0036\u20E3","\u0037\u20E3","\u0038\u20E3","\u0039\u20E3"];
+    let reaction_numbers = [":zero:",":one:",":two:",":three:",":four:",":five:"];
     let url = args[0] ? args[0].replace(/<(.+)>/g, '$1') : '';
     const searchString = args.join(' ');
     const serverQueue = ops.active.get(message.guild.id);
     const voiceChannel = message.member.voiceChannel;
     if(!voiceChannel) return message.channel.send('Bạn phải vào voice channel đã!');
     
-	  if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
+	if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
 		const playlist = await youtube.getPlaylist(url);
 			const videos = await playlist.getVideos();
 			for (const video of Object.values(videos)) {
 				const video2 = await youtube.getVideoByID(video.id); 
-				await handleVideo(video2, message, voiceChannel, true); 
-			}
-		return message.channel.send(`✅ Bài hát đã được thêm vào danh sách!`);
-	} else {
+        let ID = video2.id;
+        let Title = video2.title;
+        let Duration = video2.duration;
+        let Url = `https://www.youtube.com/watch?v=${ID}`;
+        let Thumbnail = `https://img.youtube.com/vi/${ID}/0.jpg`;
+        
+	await handleVideo(ID, Title, Duration, Url, Thumbnail, message, voiceChannel, true); 
+	}
+     return message.channel.send(`✅ Bài hát đã được thêm vào danh sách!`);
+	} else if(url.match(/^https?:\/\/(www.soundcloud.com|soundcloud.com)\/(.*)$/)){
+      try {
+        let {body} = await superagent
+    	    .get(`http://api.soundcloud.com/resolve.json?url=${args.join(' ')}&client_id=${process.env.SOUNDCLOUD_API}`);
+        if(body.tracks) message.channel.send('Danh sách phát không hợp lệ!');
+        else if (body.id) {
+            let Title = body.user.username + " - " + body.title;
+            let Duration = Time(body.duration / 1000);
+            let ID = body.id;
+            let Url = body.permalink_url;
+            let Thumbnail = body.artwork_url;
+            
+            await handleVideo(ID, Title, Duration, Url, Thumbnail, message, voiceChannel, true); 
+        }
+      } catch(err) {
+         console.error(err);
+         message.channel.send('Link không hợp lệ, bạn vui lòng thử lại.'); 
+      }
+    } else {
                 try {
                     var video = await youtube.getVideo(url);
+                    var ID = video.id;
+                    var Title = video.title;
+                    var Duration = video.duration;
+                    var Url = `https://www.youtube.com/watch?v=${ID}`;
+                    var Thumbnail = `https://img.youtube.com/vi/${ID}/0.jpg`;
                 } catch (error) {
                     try {
                         var videos = await youtube.searchVideos(searchString, 5);
@@ -52,22 +82,39 @@ module.exports.run = async(bot, message, args,ops) => {
                 }
                 const videoIndex = parseInt(response.first().content);
 				        var video = await youtube.getVideoByID(videos[videoIndex - 1].id);
+                   var ID = video.id;
+                   var Title = video.title;
+                   var Duration = video.duration;
+                   var Url = `https://www.youtube.com/watch?v=${ID}`;
+                   var Thumbnail = `https://img.youtube.com/vi/${ID}/0.jpg`;
 				} catch (err) {
 					console.error(err);
 					return message.channel.send('Không tìm thấy kết quả!');
 				}
 			}
-			return handleVideo(video, message, voiceChannel);
+			return handleVideo(ID,Title,Duration,Url,Thumbnail,message,voiceChannel);
 }
 
-async function handleVideo(video, message, voiceChannel, playlist = false) {
+async function handleVideo(ID,Title,Duration,Url,Thumbnail,message,voiceChannel,playlist = false) {
     const serverQueue = ops.active.get(message.guild.id);
-    const song = {
-	id: video.id,
-	title: video.title,
-   	duration: video.duration,
-	url: `https://www.youtube.com/watch?v=${video.id}`
-	}
+
+    if(Url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/(.*)$/)) {
+      var song = {
+	      id: ID,
+	      title: Title,
+   	      duration: generateTime(Duration.hours,Duration.minutes,Duration.seconds),
+	      url: `https://www.youtube.com/watch?v=${ID}`,
+              thumbnail: Thumbnail
+	    }
+    } else {
+      var song = {
+	      id: ID,
+	      title: Title,
+   	      duration: Duration,
+	      url: `http://api.soundcloud.com/tracks/${ID}/stream?consumer_key=${process.env.SOUNDCLOUD_API}`,
+              thumbnail: Thumbnail
+	    }
+    }
     if (!serverQueue) {
 		  const queueConstruct = {
 			  textChannel: message.channel,
@@ -86,29 +133,38 @@ async function handleVideo(video, message, voiceChannel, playlist = false) {
 			  queueConstruct.connection = connection;
 			  play(message.guild, queueConstruct.songs[0]);
 		  } catch (error) {
-			  console.error(`I could not join the voice channel: ${error}`);
+			  console.error(`Bot không thể vào được voice channel: ${error}`);
 			  ops.active.delete(message.guild.id);
 			  return message.channel.send(`Bot không thể vào được voice channel: ${error}`);
 		  }
     } else {
 		  serverQueue.songs.push(song);
-		  console.log(serverQueue.songs);
+		  //console.log(serverQueue.songs);
 		  if (playlist) return undefined;
 		  else return message.channel.send(`✅ Bài hát đã được thêm vào danh sách!`);
 	}
 	return undefined;
 }
+  
 function play(guild, song){
 	const serverQueue = ops.active.get(guild.id);
+  
 
 	if (!song) {
 		serverQueue.voiceChannel.leave();
 		ops.active.delete(guild.id);
 		return;
 	}
-	console.log(serverQueue.songs);
 
-	const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
+  
+  let url = song.url;
+  
+  if(url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/(.*)$/)){
+      var stream = ytdl(url);
+  } else var stream = url;
+  
+  //console.log(song);
+	const dispatcher = serverQueue.connection.playStream(song.url)
 		  .on('end', reason => {
       message.channel.send('Kết thúc bài hát!');
       console.log(reason);
@@ -117,18 +173,17 @@ function play(guild, song){
 		})
 		.on('error', error => console.error(error));
 	dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-
+  
   const mEmbed = new Discord.RichEmbed()
-    .setColor('#4286f4')
-    .setThumbnail(`https://img.youtube.com/vi/${song.id}/0.jpg`)
-    .addField(`================================================`,`
+      .setColor('#4286f4')
+      .setThumbnail(song.thumbnail)
+      .addField(`================================================`,`
 🎶 Đang phát nhạc: **${song.title}**  
-
-0:00 :white_circle:─────────────────────────────── ${generateTime(song.duration.hours,song.duration.minutes,song.duration.seconds)}
+0:00 :white_circle:─────────────────────────────── ${song.duration}
 ◄◄⠀▐▐ ⠀►►⠀⠀　　        　　 :gear: ❐ ⊏⊐ 
 =============================================== `)
   serverQueue.textChannel.send(mEmbed);
-}
+  }
 }
 
 let generateTime = (hour,minute,second) =>{
@@ -142,6 +197,18 @@ let generateTime = (hour,minute,second) =>{
       	else if(minute>10 && second<10) return `${hour}:${minute}:0${second}`;
         else return `${minute}:${second}`;
       }
+}
+
+let Time = (time) => {   
+    var hrs = ~~(time / 3600);
+    var mins = ~~((time % 3600) / 60);
+    var secs = ~~time % 60;
+    var ret = "";
+    if (hrs > 0)
+        ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+    ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+    ret += "" + secs;
+    return ret;
 }
 
 module.exports.config = {
