@@ -1,4 +1,4 @@
-# Miyamizu Discord Bot
+# Bot Miyamizu
 
 A simple discord.js bot written by Legion1053
 
