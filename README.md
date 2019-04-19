@@ -13,6 +13,6 @@
 | Actions | `cuddle` `dance` `feed` `holdhand` `hug` `kiss` `pat` `poke` `shrug` `slap` `smile` `stare` `tickle` |
 | Music | `leave` `np` `pause` `play` `queue` `resume` `skip` `volume` |
 
-#### **10/04/19 | v1.0.0 **
+#### 10/04/19 | v1.0.0
 
    > Test 1
