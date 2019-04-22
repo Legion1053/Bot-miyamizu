@@ -10,7 +10,7 @@ module.exports.run = async(bot,message,args) =>{
   if (!mention) return message.channel.send(`Bạn phải chọn người để hôn đã :|`).then(msg => {
     	msg.delete(3000)
   });
-  else if(args[0] === '<@514823687560757268>') message.channel.send(`Aww cảm ơn bạn XD`,{embed: Emb});	  
+  else if(args[0] === '<@514823687560757268>') message.channel.send(`<3`,{embed: Emb});	  
   else message.channel.send(`**${message.author.username}** vừa hôn **${mention.username}** kìa :kissing_heart: `,{embed: Emb});
 
 }
