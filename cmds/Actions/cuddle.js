@@ -20,5 +20,6 @@ module.exports.config = {
 	command: 'cuddle',
   	category: 'Actions',
   	description: 'Dùng để âu yếm ai đó :D',
-  	usage: '>>cuddle [@user]'
+  	usage: '>>cuddle [@user]',
+  	aliases: []
 }
