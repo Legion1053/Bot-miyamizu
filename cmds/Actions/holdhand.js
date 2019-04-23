@@ -16,7 +16,8 @@ module.exports.run = async(bot,message,args) =>{
 
 module.exports.config ={
 	command: 'holdhand',
-  category: 'Actions',
-  description: 'Dùng để nắm tay ai đó',
-  usage: '>>holdhand [@user]'
+  	category: 'Actions',
+  	description: 'Dùng để nắm tay ai đó',
+  	usage: '>>holdhand [@user]',
+  	aliases: []
 }
