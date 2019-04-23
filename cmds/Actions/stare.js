@@ -16,7 +16,8 @@ module.exports.run = async(bot,message,args) =>{
 
 module.exports.config ={
 	command: 'stare',
-  category: 'Actions',
-  description: 'Dùng để lườm ai đó :grimacing:',
-  usage: '>>poke [@user]'
+  	category: 'Actions',
+  	description: 'Dùng để lườm ai đó :grimacing:',
+  	usage: '>>poke [@user]',
+	aliases: []
 }
