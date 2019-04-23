@@ -16,7 +16,8 @@ module.exports.run = async(bot,message,args) =>{
 
 module.exports.config ={
 	command: 'dance',
-  category: 'Actions',
-  description: 'Dùng để nhảy với ai đó',
-  usage: '>>dance [@user]'
+  	category: 'Actions',
+  	description: 'Dùng để nhảy với ai đó',
+  	usage: '>>dance [@user]',
+  	aliases: []
 }
