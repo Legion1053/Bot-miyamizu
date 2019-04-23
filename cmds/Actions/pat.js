@@ -18,5 +18,6 @@ module.exports.config = {
 	command: 'pat',
   	category: 'Actions',
   	description: 'Dùng để xoa đầu ai đó XD',
-  	usage: '>>pat [@user]'
+  	usage: '>>pat [@user]',
+  	aliases: []
 }
