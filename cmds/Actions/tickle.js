@@ -18,5 +18,6 @@ module.exports.config = {
 	command: 'tickle',
   	category: 'Actions',
   	description: 'Dùng để cù ai đó :3',
-  	usage: '>>tickle [@user]'
+  	usage: '>>tickle [@user]',
+	aliases: []
 }
