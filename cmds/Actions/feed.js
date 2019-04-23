@@ -16,7 +16,8 @@ module.exports.run = async(bot,message,args) =>{
 
 module.exports.config = {
 	command: 'feed',
-  category: 'Actions',
-  description: 'Dùng để cho ai đó ăn :3',
-  usage: '>>feed [@user]'
+  	category: 'Actions',
+  	description: 'Dùng để cho ai đó ăn :3',
+  	usage: '>>feed [@user]',
+  	aliases: []
 }
