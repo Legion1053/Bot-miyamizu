@@ -19,5 +19,6 @@ module.exports.config ={
 	command: 'kiss',
   	category: 'Actions',
   	description: 'Dùng để hôn ai đó XD',
-  	usage: '>>kiss [@user]'
+  	usage: '>>kiss [@user]',
+  	aliases: []
 }
