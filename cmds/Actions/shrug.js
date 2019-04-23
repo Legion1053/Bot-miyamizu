@@ -11,7 +11,8 @@ module.exports.run = async(bot,message,args,db) =>{
 
 module.exports.config ={
 	command: 'shrug',
-  category: 'Actions',
-  description: `Dùng để ¯\\_\(ツ)\_\/¯`,
-  usage: '>>shrug'
+  	category: 'Actions',
+  	description: `Dùng để ¯\\_\(ツ)\_\/¯`,
+  	usage: '>>shrug',
+  	aliases: []
 }
