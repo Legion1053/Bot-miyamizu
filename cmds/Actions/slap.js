@@ -1,4 +1,4 @@
-onst Discord = require("discord.js");
+const Discord = require("discord.js");
 const superagent = require("superagent");
 
 module.exports.run = async(bot,message,args,db) =>{
@@ -16,7 +16,8 @@ module.exports.run = async(bot,message,args,db) =>{
 
 module.exports.config = {
 	command: 'slap',
- 	category: 'Actions',
+  	category: 'Actions',
   	description: 'Dùng để tát ai đó :v',
-  	usage: '>>slap [@user]'
+  	usage: '>>slap [@user]',
+  	aliases: []
 }
