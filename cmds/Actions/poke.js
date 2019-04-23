@@ -18,5 +18,6 @@ module.exports.config = {
 	command: 'poke',
   	category: 'Actions',
   	description: 'Dùng để chọc ai đó :3',
-  	usage: '>>poke [@user]'
+  	usage: '>>poke [@user]',
+  	aliases: []
 }
