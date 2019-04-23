@@ -16,7 +16,8 @@ module.exports.run = async(bot,message,args) =>{
 
 module.exports.config ={
 	command: 'smile',
- 	category: 'Actions',
+  	category: 'Actions',
   	description: 'Dùng để cười với ai đó :3',
-  	usage: '>>smile [@user]'
+  	usage: '>>smile [@user]',
+  	aliases: [':)']
 }
