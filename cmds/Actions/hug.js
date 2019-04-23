@@ -18,5 +18,6 @@ module.exports.config = {
 	command: 'hug',
   	category: 'Actions',
   	description: 'Dùng để ôm ai đó <3',
-  	usage: '>>hug [@user]'
+  	usage: '>>hug [@user]',
+  	aliases: []
 }
