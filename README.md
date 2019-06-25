@@ -1,8 +1,8 @@
+<img width="150" height="150" align="left" style="float: left; margin: 0 10px 0 0;" alt="Miya" src="https://cdn.glitch.com/6cb92f63-8862-4223-91b7-2e146f1b9a65%2Fmsh3.png?1555601136185">  
+
 # Bot Miyamizu
 
-![miyamizu](https://cdn.glitch.com/6cb92f63-8862-4223-91b7-2e146f1b9a65%2Fmsh3.png?1555601136185)
-
->A simple discord.js bot written by WoodPecker
+> A simple discord.js bot written by WoodPecker
 
 ## Commands
 | Category | Commands |
